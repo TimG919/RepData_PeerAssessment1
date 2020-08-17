@@ -33,7 +33,7 @@ median(totalStepsbyDay$Steps)
 avgDailyPattern <- with(activity,aggregate(steps, by = list(interval),mean, na.rm = TRUE))
 colnames(avgDailyPattern) <- c('Interval','AvgSteps')
 plot(avgDailyPattern$Interval,avgDailyPattern$AvgSteps,type = "l",
-     xlab = "Interval", ylab = "Average Steps", main = "Time Series of Average Daily Steps")
+     xlab = "Interval", ylab = "Average Steps", main = "Time Series of Average Steps Taken")
 # qplot(Interval,AvgSteps,data = avgDailyPattern, geom = "line")
 
 # Step 5
@@ -56,8 +56,18 @@ totalStepsbyDayClean$Date <- as.Date(totalStepsbyDayClean$Date,"%Y-%m-%d")
 # Step 7
 hist(totalStepsbyDayClean$Steps, xlab = "Total Steps", 
      main = "Histogram Total Steps Taken each Day")
+mean(totalStepsbyDayClean$Steps)
+median(totalStepsbyDayClean$Steps)
+
+# Step 8
+activity3 <- activity2
+activity3$date <- as.Date(activity3$date,"%Y-%m-%d")
+activity3$type <- factor(grepl("S.+",weekdays(activity3$date)),levels = c(FALSE,TRUE),
+                         labels = c("weekday","weekend"))
 
 
-
-
+avgDailyPatternClean <- with(activity3,aggregate(steps, by = list(interval,type),mean))
+colnames(avgDailyPatternClean) <- c('Interval','Type','AvgSteps')
+qplot(Interval,AvgSteps,data = avgDailyPatternClean, facets = Type~. , geom = "line",
+      ylab = "Number of Steps", main = "Time Series of Average Steps Taken", colour = Type)
 
