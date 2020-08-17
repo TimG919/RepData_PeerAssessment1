@@ -98,6 +98,9 @@ hist(totalStepsbyDayClean$Steps, xlab = "Total Steps",
      main = "Histogram Total Steps Taken each Day")
 ```
 
+Histogram shows a change to a more bell shaped format on data set replacing NA values with the average for the related 5 minute interval. The impact of replacing the NA values decreased number of days where daily steps is 10k or below and increased the days with 10k to 15k steps.  
+
+
 Mean of total steps taken per day after imputing NA values
 
 ```{R newMean}
@@ -114,7 +117,7 @@ median(totalStepsbyDayClean$Steps)
 
 ```
 
-Using the mean to replace NA values has cause mean and median values to be the same.
+Using the mean to replace NA values has caused mean and median values to be the same.
 
 
 ## Are there differences in activity patterns between weekdays and weekends?

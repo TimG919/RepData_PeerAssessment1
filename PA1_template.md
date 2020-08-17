@@ -13,7 +13,7 @@ Steps to load and process the data
 ```r
 library(ggplot2)
 
-      # unzip file if not already done and read csv
+      # unzip file if not previously done and read csv
 if (exists("activity.csv")) {
       activity <- read.csv("activity.csv")
 }     else {
@@ -21,20 +21,17 @@ if (exists("activity.csv")) {
       activity <- read.csv("activity.csv")
 }
 
-# summarize data, omit NA values & format fields
-totalStepsbyDay <- with(activity,aggregate(steps, by = list(date),sum))
-totalStepsbyDay <- na.omit(totalStepsbyDay)
+# summarize data, omit NA values, set columns and format date field
+totalStepsbyDay <- with(activity,aggregate(steps, by = list(date),sum, na.rm = TRUE))
 colnames(totalStepsbyDay) <- c('Date','Steps')
 totalStepsbyDay$Date <- as.Date(totalStepsbyDay$Date,"%Y-%m-%d")
 
-# summarize data average daily activity pattern excluding NA values
+# summarize data average daily activity pattern and set column names
 avgDailyPattern <- with(activity,aggregate(steps, by = list(interval),mean, na.rm = TRUE))
 colnames(avgDailyPattern) <- c('Interval','AvgSteps')
 ```
 
-
 ## What is mean total number of steps taken per day?
-
 
 
 ```r
@@ -52,7 +49,7 @@ mean(totalStepsbyDay$Steps)
 ```
 
 ```
-## [1] 10766.19
+## [1] 9354.23
 ```
 
 Median of total steps taken per day excluding NA values
@@ -63,7 +60,7 @@ median(totalStepsbyDay$Steps)
 ```
 
 ```
-## [1] 10765
+## [1] 10395
 ```
 
 ## What is the average daily activity pattern?
@@ -90,7 +87,7 @@ avgDailyPattern[which.max(avgDailyPattern$AvgSteps),]
 
 ## Imputing missing values
 
-Number of rows with NA as shown in summary of steps column
+2304 rows in steps field have NA as shown in summary of steps column
 
 
 ```r
@@ -120,6 +117,9 @@ hist(totalStepsbyDayClean$Steps, xlab = "Total Steps",
 
 ![](PA1_template_files/figure-html/newdataset-1.png)<!-- -->
 
+Histogram shows a change to a more bell shaped format on data set replacing NA values with the average for the related 5 minute interval. The impact of replacing the NA values decreased number of days where daily steps is 10k or below and increased the days with 10k to 15k steps.  
+
+
 Mean of total steps taken per day after imputing NA values
 
 
@@ -142,7 +142,7 @@ median(totalStepsbyDayClean$Steps)
 ## [1] 10766.19
 ```
 
-Using the mean to replace NA values has cause mean and median values to be the same.
+Using the mean to replace NA values has caused mean and median values to be the same.
 
 
 ## Are there differences in activity patterns between weekdays and weekends?
@@ -162,7 +162,7 @@ avgDailyPatternClean <- with(activity3,aggregate(steps, by = list(interval,type)
 colnames(avgDailyPatternClean) <- c('Interval','Type','AvgSteps')
 ```
 
-Plot of data by weekend or weekday
+Plot of data by weekend or weekday highlights the differences in averages for a weekday vs a weekend
 
 
 ```r
@@ -171,3 +171,4 @@ qplot(Interval,AvgSteps,data = avgDailyPatternClean, facets = Type~. , geom = "l
 ```
 
 ![](PA1_template_files/figure-html/typeplot-1.png)<!-- -->
+
