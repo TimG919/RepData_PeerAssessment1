@@ -29,10 +29,35 @@ hist(totalStepsbyDay$Steps, xlab = "Total Steps",
 mean(totalStepsbyDay$Steps)
 median(totalStepsbyDay$Steps)
 
-# Step 4lib
+# Step 4
 avgDailyPattern <- with(activity,aggregate(steps, by = list(interval),mean, na.rm = TRUE))
 colnames(avgDailyPattern) <- c('Interval','AvgSteps')
-plot(avgDailyPattern$Interval,avgDailyPattern$AvgSteps,type = "l")
+plot(avgDailyPattern$Interval,avgDailyPattern$AvgSteps,type = "l",
+     xlab = "Interval", ylab = "Average Steps", main = "Time Series of Average Daily Steps")
+# qplot(Interval,AvgSteps,data = avgDailyPattern, geom = "line")
+
+# Step 5
+avgDailyPattern[which.max(avgDailyPattern$AvgSteps),]
+
+# Step 6
+# activity dataset contains 2304 missing values in the steps field
+# will use mean for that 5 minute interval
+
+activity2 <- activity
+activity2$newSteps <- ave(activity2$steps, activity2$interval, FUN = function(x)mean(x[!is.na(x)]))
+activity2$steps <- ifelse(is.na(activity2$steps),activity2$newSteps,activity2$steps)
+totalStepsbyDayClean <- with(activity2,aggregate(steps, by = list(date),sum))
+colnames(totalStepsbyDayClean) <- c('Date','Steps')
+totalStepsbyDayClean$Date <- as.Date(totalStepsbyDayClean$Date,"%Y-%m-%d")
+
+#activity2$steps[activity2$steps == "NA"] <-  replace(activty2$steps,activty2$newSteps)
+#activty2 <- replace(activity2$steps,activty2$steps == "NA",activity2$newSteps)
+
+# Step 7
+hist(totalStepsbyDayClean$Steps, xlab = "Total Steps", 
+     main = "Histogram Total Steps Taken each Day")
+
+
 
 
 
