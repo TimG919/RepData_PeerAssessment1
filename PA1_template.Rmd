@@ -12,7 +12,7 @@ Steps to load and process the data
 ```{R Load and Clean Process}
 library(ggplot2)
 
-      # unzip file if not already done and read csv
+      # unzip file if not previously done and read csv
 if (exists("activity.csv")) {
       activity <- read.csv("activity.csv")
 }     else {
@@ -20,21 +20,18 @@ if (exists("activity.csv")) {
       activity <- read.csv("activity.csv")
 }
 
-# summarize data, omit NA values & format fields
-totalStepsbyDay <- with(activity,aggregate(steps, by = list(date),sum))
-totalStepsbyDay <- na.omit(totalStepsbyDay)
+# summarize data, omit NA values, set columns and format date field
+totalStepsbyDay <- with(activity,aggregate(steps, by = list(date),sum, na.rm = TRUE))
 colnames(totalStepsbyDay) <- c('Date','Steps')
 totalStepsbyDay$Date <- as.Date(totalStepsbyDay$Date,"%Y-%m-%d")
 
-# summarize data average daily activity pattern excluding NA values
+# summarize data average daily activity pattern and set column names
 avgDailyPattern <- with(activity,aggregate(steps, by = list(interval),mean, na.rm = TRUE))
 colnames(avgDailyPattern) <- c('Interval','AvgSteps')
 
 ```
 
-
 ## What is mean total number of steps taken per day?
-
 
 ```{R Hist}
 
@@ -77,7 +74,7 @@ avgDailyPattern[which.max(avgDailyPattern$AvgSteps),]
 
 ## Imputing missing values
 
-Number of rows with NA as shown in summary of steps column
+2304 rows in steps field have NA as shown in summary of steps column
 
 ```  {R rowsNA}
 
@@ -138,11 +135,12 @@ colnames(avgDailyPatternClean) <- c('Interval','Type','AvgSteps')
 
 ```
 
-Plot of data by weekend or weekday
+Plot of data by weekend or weekday highlights the differences in averages for a weekday vs a weekend
 
 ``` {R typeplot}
 
 qplot(Interval,AvgSteps,data = avgDailyPatternClean, facets = Type~. , geom = "line",
       ylab = "Number of Steps", main = "Time Series of Average Steps Taken", colour = Type)
 
+```
 

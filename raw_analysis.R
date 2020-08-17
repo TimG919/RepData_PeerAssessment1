@@ -11,10 +11,9 @@ if (exists("activity.csv")) {
 }
       
 # totalStepsbyDay <- aggregate(steps ~ date, activity, sum)
-
 # summarize and clean data
-totalStepsbyDay <- with(activity,aggregate(steps, by = list(date),sum))
-totalStepsbyDay <- na.omit(totalStepsbyDay)
+totalStepsbyDay <- with(activity,aggregate(steps, by = list(date),sum, na.rm = TRUE))
+#totalStepsbyDay <- na.omit(totalStepsbyDay)
 colnames(totalStepsbyDay) <- c('Date','Steps')
 totalStepsbyDay$Date <- as.Date(totalStepsbyDay$Date,"%Y-%m-%d")
 # totalStepsbyDay$x <- as.numeric(totalStepsbyDay$x)
